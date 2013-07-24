@@ -212,13 +212,14 @@ class Maze
   end
 end
 
-if ARGV.length != 2
-  puts "Usage: #{$0} <rows> <cols>"
-  exit 0
-end
 
 rows = ARGV[0].to_i
 cols = ARGV[1].to_i
+
+if rows <= 0 || cols <= 0
+  puts "Usage: #{$0} <rows> <cols>"
+  exit -1
+end
 
 maze = Maze.new(rows, cols)
 maze.generate
