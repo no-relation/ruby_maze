@@ -5,14 +5,11 @@
 # plane of possibly-connected maze passages.
 #
 class Node
-  attr_accessor :row, :col, :visited, :neighbors,
-                :is_entrance, :is_exit, :on_path
+  attr_accessor :row, :col, :visited, :neighbors, :on_path
 
   def initialize(row, col)
     @row = row
     @col = col
-    @is_entrance = false
-    @is_exit = false
     @visited = false
     @on_path = false
     @neighbors = {north: nil, east: nil, south: nil, west: nil}
@@ -60,10 +57,7 @@ class Maze
 
     # Pick start and end nodes on opposite ends.
     @start_node = @maze[rand(@rows)][0]
-    @start_node.is_entrance = true
-
     @end_node = @maze[rand(@rows)][@cols - 1]
-    @end_node.is_exit = true
   end
 
   # Generate the maze.
@@ -114,7 +108,7 @@ class Maze
         next_node.on_path = true
 
         # If we're at the exit, we're done.
-        break if next_node.is_exit
+        break if next_node == @end_node
 
         # Otherwise, push onto the stack and keep going.
         stack.push(node)
@@ -182,7 +176,7 @@ class Maze
 
       # Pass two
       row.each do |node|
-        buf << if node.neighbors[:west] || node.is_entrance
+        buf << if node.neighbors[:west] || node == @start_node
                  " "
                else
                  "|"
@@ -195,7 +189,7 @@ class Maze
                end
 
         if node.col == @cols - 1
-          buf << if node.is_exit
+          buf << if node == @end_node
                    " "
                  else
                    "|"
